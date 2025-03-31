@@ -1,0 +1,32 @@
+.container {
+	width: 880px;
+	margin: 0 auto;
+	height: 100px;
+	position: relative;
+	/* padding: 30px 0; */
+}
+
+.container::after {
+	content: '';
+	position: absolute;
+	top: 0px;
+  right: 0;
+	width: 570px;
+	height: 2px;
+	background-color: var(--primary-color);
+}
+
+.copyright {
+	font-family: var(--font-family);
+  font-size: 18px;
+  letter-spacing: 0.5px;
+  color: var(--primary-color);
+  position: absolute;
+  top: -14px;
+  left: 0;
+  font-weight: 700;
+}
+
+.copyright:hover {
+	color: var(--accent-color);
+}
