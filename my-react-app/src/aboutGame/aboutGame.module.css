@@ -1,0 +1,31 @@
+.title {
+	font-size: 32px;
+	margin-top: 0;
+	margin-bottom: 14px;
+}
+
+.list {
+	margin: 0;
+	list-style: none;
+	/* list-style-image: url('image/arrow.png'); */
+}
+
+.item {
+	padding-bottom: 19px;
+	position: relative;
+}
+
+.item::before {
+	content: '';
+	position: absolute;
+	top: 3px;
+	left: -40px;
+	width: 27px;
+	height: 20px;
+	background-image: url('image/arrow.png');
+	background-repeat: no-repeat;
+}
+
+.item_span {
+	font-weight: 600;
+}

@@ -1,0 +1,31 @@
+.wrap {
+	width: 880px;
+	min-height: 380px;
+	background-color: var(--background-secondary-color);
+	padding: 35px;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.timer {
+	font-size: 32px;
+	color: var(--text-accent-color);
+}
+
+.question {
+	font-family: var(--second-family);
+	font-size: 22px;
+}
+
+.input {
+	font-family: var(--second-family);
+	font-size: 20px;
+	color: var(--text-accent-color);
+	background-color: var(--background-color);
+	width: 540px;
+	margin-top: auto;
+	border: none;
+	padding: 12px 22px;
+}

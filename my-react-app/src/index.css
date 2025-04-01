@@ -17,9 +17,14 @@
 	--accent-color: #ffc107;
 }
 
+* {
+	box-sizing: border-box;
+}
+
 body {
 	font-family: var(--font-family);
 	font-size: 16px;
+	letter-spacing: 0.5px;
 	color: var(--text-primary-color);
 	background-color: var(--background-color);
   /* min-width: 880px;
