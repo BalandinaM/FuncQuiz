@@ -1,8 +1,8 @@
 import AboutGame from '../aboutGame/aboutGame';
 import Footer from '../footer/footer';
-import GameField from '../gameField/gameField';
+import GameContainer from '../gameContainer/gameContainer';
 import Header from '../header/header';
-import SelectCategory from '../selectCategory/selectCategory';
+import ResultGame from '../resultGame/resultGame';
 import styles from './root.module.css'
 
 function Root() {
@@ -12,9 +12,8 @@ function Root() {
       <Header/>
 			<div className={styles.wrapContent}>
 				<AboutGame />
-				<SelectCategory/>
-				<button>Начать игру!</button>
-				<GameField />
+				{/* <GameContainer /> */}
+				<ResultGame />
 			</div>
 			<Footer/>
     </div>
