@@ -63,6 +63,12 @@ button {
 	padding: 13px 25px;
   transition: background-color 0.25s;
 }
+
 button:hover {
   background-color: var(--accent-color);
+}
+
+button:disabled {
+	opacity: 0.5;
+  /* background-color: var(--accent-color); */
 }

@@ -3,5 +3,10 @@
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
-	margin-bottom: 5px;
+	margin-bottom: 30px;
+}
+
+.select {
+	width: 250px;
+	padding: 9px 16px;
 }
