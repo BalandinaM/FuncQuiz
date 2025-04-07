@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import SelectCategory from "../selectCategory/selectCategory";
 import SelectTime from "../selectTime/selectTime";
 //import GameField from "../gameField/gameField";
@@ -11,6 +12,14 @@ import { useState, useEffect } from "react";
 //они отрисовывают контент
 
 const GameContainer = ({setShowGameScreen}) => {
+	const questions = useSelector((state) => state.questionsGame);
+	console.log(Object.keys(questions));
+
+	//код выше вероятно стоит перенести в компонент отвечающий за выбор категории,
+	//и чтобы этот компонент через состояние передавал сюда значение в селекте
+	//и уже тут будем искать нужный массив фильтровать и выводить на экран
+
+
 	const [isGameStarted, setIsGameStarted] = useState(false);
 	const [timeLeft, setTimeLeft] = useState(60); // время в секундах
 	const gameTime = ["1 минута", "2 минуты", "3 минуты"];
