@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
 //компоненты должны быть тупенькими, они ни чего не должны занть что происходит,
 //они отрисовывают контент
 
-const GameContainer = () => {
+const GameContainer = ({setShowGameScreen}) => {
 	const [isGameStarted, setIsGameStarted] = useState(false);
 	const [timeLeft, setTimeLeft] = useState(60); // время в секундах
 	const gameTime = ["1 минута", "2 минуты", "3 минуты"];
@@ -28,6 +28,7 @@ const GameContainer = () => {
 					if (prevTime <= 1) {
 						clearInterval(timerId);
 						setIsGameStarted(false);
+						setShowGameScreen(false);
 						return 0;
 					}
 					return prevTime - 1;
@@ -35,7 +36,7 @@ const GameContainer = () => {
 			}, 1000);
 		}
 		return () => clearInterval(timerId);
-	}, [isGameStarted, timeLeft]);
+	}, [isGameStarted, timeLeft, setShowGameScreen]);
 
 	const handleSelectedTime = (event) => {
 		setSelectedTime(event.target.value);

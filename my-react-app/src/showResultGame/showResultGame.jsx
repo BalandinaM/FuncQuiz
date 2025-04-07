@@ -1,10 +1,10 @@
-import styles from './resultGame.module.css'
+import styles from './showResultGame.module.css'
 
 
-const ResultGame = () => {
+const ShowResultGame = () => {
 	return (
 		<div>
-			<h2 className={styles.title}>Результаты тренировки</h2>
+			<h2 className={styles.title}>Результаты</h2>
 			<div className={styles.wrap}>
 				<div className={styles.statistics}>
 					<p>Время: <span>00:01:00</span></p>
@@ -26,7 +26,7 @@ const ResultGame = () => {
 					</div>
 				</div>
 				<div className={styles.buttonWrap}>
-					<button>Повторить тренировку</button>
+					<button>Повторить</button>
 					<button className={styles.buttonReset}>Сбросить результаты</button>
 				</div>
 			</div>
@@ -34,4 +34,4 @@ const ResultGame = () => {
 	)
 }
 
-export default ResultGame;
+export default ShowResultGame;

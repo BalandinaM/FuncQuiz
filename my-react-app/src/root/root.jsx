@@ -2,7 +2,7 @@ import AboutGame from '../aboutGame/aboutGame';
 import Footer from '../footer/footer';
 import GameContainer from '../gameContainer/gameContainer';
 import Header from '../header/header';
-import ResultGame from '../resultGame/resultGame';
+import ShowResultGame from '../showResultGame/showResultGame';
 import styles from './root.module.css';
 import { useState } from 'react';
 
@@ -16,8 +16,8 @@ const Root = () => {
 			<div className={styles.wrapContent}>
 				<AboutGame />
 				{showGameScreen ?
-					<GameContainer /> :
-					<ResultGame />
+					<GameContainer setShowGameScreen={setShowGameScreen}/> :
+					<ShowResultGame />
 				}
 			</div>
 			<Footer/>
