@@ -1,29 +1,83 @@
+/* eslint-disable react/prop-types */
 import { useSelector } from "react-redux";
 import SelectCategory from "../selectCategory/selectCategory";
 import SelectTime from "../selectTime/selectTime";
-//import GameField from "../gameField/gameField";
 import styles from "./gameContainer.module.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
-//написать функцию для таймера
-//наверное понадобится useEffect следящий за состоянием isGameStarted
-//взможно утром тебе покажется что зря разбила на кучу компонентов так как придется кучу всего передавать через пропсы, но
-//компоненты должны быть тупенькими, они ни чего не должны занть что происходит,
-//они отрисовывают контент
-
-const GameContainer = ({setShowGameScreen}) => {
+const GameContainer = ({ setShowGameScreen }) => {
 	const questions = useSelector((state) => state.questionsGame);
-	console.log(Object.keys(questions));
+	const questionCategories = Object.keys(questions);
+	const [selectedCategory, setSelectedCategory] = useState("arrays");
+	const [currentQuestion, setCurrentQuestion] = useState(null);
+	const [inputValue, setInputValue] = useState("");
+	const isDisabled = currentQuestion === null; //состояние для инпута и кнопки пока игра не началась
+	const counterShowQuestionsRef = useRef(0);
+	const [inputClass, setInputClass] = useState(styles.input);
 
-	//код выше вероятно стоит перенести в компонент отвечающий за выбор категории,
-	//и чтобы этот компонент через состояние передавал сюда значение в селекте
-	//и уже тут будем искать нужный массив фильтровать и выводить на экран
+	const getRandomQuestion = (array) => {
+		//получение рандомного вопроса
+		const randomIndex = Math.floor(Math.random() * array.length);
+		return array[randomIndex];
+	};
 
+	const handleInputChange = (event) => {
+		setInputValue(event.target.value);
+	};
+
+	// const handleKeyDown = (event) => {
+	// 	if (event.key === "Enter") {
+	// 		if (inputValue === currentQuestion.answer) {
+	// 			// тут должно быть действие которое меняет статус isLearn на true
+	// 			//моргнуть зеленым
+	// 			counterShowQuestionsRef.current += 1;
+	// 			setInputValue("");
+	// 			setCurrentQuestion(getRandomQuestion(questions[selectedCategory]));
+	// 		} else {
+	// 			console.log('error!!!!')
+	// 			// тут надо сохранить вопрос чтобы вывести его в результатах
+	// 			//моргнуть красным
+	// 			counterShowQuestionsRef.current += 1;
+	// 			setCurrentQuestion(getRandomQuestion(questions[selectedCategory]));
+	// 			setInputValue("");
+	// 		}
+	// 	}
+	// };
+
+	const handleKeyDown = (event) => {
+		if (event.key === "Enter") {
+			if (!inputValue.trim()) return;
+			if (inputValue.trim() === currentQuestion.answer) {
+				// тут должно быть действие которое меняет статус isLearn на true
+				setInputClass(styles.input_correct)
+				counterShowQuestionsRef.current += 1;
+			} else {
+				console.log('error!!!!')
+				// тут надо сохранить вопрос чтобы вывести его в результатах
+				setInputClass(styles.input_error)
+				counterShowQuestionsRef.current += 1;
+			}
+
+			setTimeout(() => {
+				setInputClass(styles.input);
+				setInputValue("");
+				setCurrentQuestion(getRandomQuestion(questions[selectedCategory].filter((item) => item.isLearn === false)));
+
+		}, 400);
+		}
+	};
+
+	// получается надо какое-то дополнительное место где хранить правильные и неправильные ответы
 
 	const [isGameStarted, setIsGameStarted] = useState(false);
 	const [timeLeft, setTimeLeft] = useState(60); // время в секундах
 	const gameTime = ["1 минута", "2 минуты", "3 минуты"];
 	const [selectedTime, setSelectedTime] = useState("1 минута");
+
+	const startGame = () => {
+		setIsGameStarted(true);
+		setCurrentQuestion(getRandomQuestion(questions[selectedCategory].filter((item) => item.isLearn === false)));
+	};
 
 	const optionsGameTime = gameTime.map((text, index) => {
 		return <option key={index}>{text}</option>;
@@ -64,10 +118,6 @@ const GameContainer = ({setShowGameScreen}) => {
 		}
 	};
 
-	const startGame = () => {
-		setIsGameStarted(true);
-	};
-
 	const formatTime = (seconds) => {
 		const mins = Math.floor(seconds / 60);
 		const secs = seconds % 60;
@@ -76,25 +126,37 @@ const GameContainer = ({setShowGameScreen}) => {
 
 	return (
 		<>
-			<SelectCategory />
+			<SelectCategory
+				questionCategories={questionCategories}
+				selectedCategory={selectedCategory}
+				setSelectedCategory={setSelectedCategory}
+			/>
 			<SelectTime
 				selectedTime={selectedTime}
 				handleSelectedTime={handleSelectedTime}
 				optionsGameTime={optionsGameTime}
 			/>
-			<button
-				className={styles.buttonPlay}
-				onClick={startGame}
-				disabled={isGameStarted}
-			>
+			<button className={styles.buttonPlay} onClick={startGame} disabled={isGameStarted}>
 				Начать
 			</button>
 			<div className={styles.wrap}>
 				<div className={styles.timer}>{formatTime(timeLeft)}</div>
 				<div className={styles.question}>
-					<p>Метод изменяет порядок элементов в массиве на обратный</p>
+					{currentQuestion != null ? (
+						<p>{currentQuestion.question}</p>
+					) : (
+						<p>Метод изменяет порядок элементов в массиве на обратный</p>
+					)}
 				</div>
-				<input className={styles.input} type="text" placeholder="reverse()" />
+				<input
+					value={inputValue}
+					className={inputClass}
+					type="text"
+					placeholder="Для отправки ответа нажмите Enter"
+					onChange={handleInputChange}
+					onKeyDown={handleKeyDown}
+					disabled={isDisabled}
+				/>
 			</div>
 		</>
 	);

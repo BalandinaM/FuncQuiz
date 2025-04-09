@@ -38,3 +38,31 @@
 	border: none;
 	padding: 12px 22px;
 }
+
+/* .input:focus-visible {
+	outline: red;
+} */
+
+.input_correct {
+	font-family: var(--second-family);
+	font-size: 20px;
+	color: var(--primary-color);
+	background-color: var(--background-color);
+	width: 540px;
+	margin-top: auto;
+	border: none;
+	padding: 12px 22px;
+	transition: color 0.3s ease;
+}
+
+.input_error {
+	font-family: var(--second-family);
+	font-size: 20px;
+	color: var(--error-color);
+	background-color: var(--background-color);
+	width: 540px;
+	margin-top: auto;
+	border: none;
+	padding: 12px 22px;
+	transition: color 0.3s ease;
+}
