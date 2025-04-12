@@ -1,7 +1,9 @@
 import styles from './showResultGame.module.css'
 
 
-const ShowResultGame = () => {
+const ShowResultGame = ({unstudiedQuestions}) => {
+	console.log(unstudiedQuestions);
+
 	return (
 		<div>
 			<h2 className={styles.title}>Результаты</h2>

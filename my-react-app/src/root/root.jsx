@@ -8,6 +8,7 @@ import { useState } from 'react';
 
 const Root = () => {
 	const [showGameScreen, setShowGameScreen] = useState(true);//когда таймер дотикает надо будет менять на false
+	const [unstudiedQuestions, setUnstudiedQuestions] = useState();
 
 
   return (
@@ -16,8 +17,8 @@ const Root = () => {
 			<div className={styles.wrapContent}>
 				<AboutGame />
 				{showGameScreen ?
-					<GameContainer setShowGameScreen={setShowGameScreen}/> :
-					<ShowResultGame />
+					<GameContainer setShowGameScreen={setShowGameScreen} setUnstudiedQuestions={setUnstudiedQuestions}/> :
+					<ShowResultGame unstudiedQuestions={unstudiedQuestions}/>
 				}
 			</div>
 			<Footer/>

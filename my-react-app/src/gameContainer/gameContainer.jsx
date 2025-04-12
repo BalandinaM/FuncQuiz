@@ -5,7 +5,7 @@ import SelectTime from "../selectTime/selectTime";
 import styles from "./gameContainer.module.css";
 import { useState, useEffect, useRef } from "react";
 
-const GameContainer = ({ setShowGameScreen }) => {
+const GameContainer = ({ setShowGameScreen, setUnstudiedQuestions }) => {
 	const questions = useSelector((state) => state.questionsGame);
 	const questionCategories = Object.keys(questions);
 	const [selectedCategory, setSelectedCategory] = useState("arrays");
@@ -14,46 +14,33 @@ const GameContainer = ({ setShowGameScreen }) => {
 	const isDisabled = currentQuestion === null; //состояние для инпута и кнопки пока игра не началась
 	const counterShowQuestionsRef = useRef(0);
 	const [inputClass, setInputClass] = useState(styles.input);
+	const arrayStudiedQuestionsRef = useRef([]);
+	const arrayUnstudiedQuestionsRef = useRef([]);
 
-	const getRandomQuestion = (array) => {
-		//получение рандомного вопроса
+	const getRandomIndex = (array) => {
 		const randomIndex = Math.floor(Math.random() * array.length);
 		return array[randomIndex];
 	};
+
+	// const findIndexById = (array, id) => {
+	// 	return array.findIndex((item) => item.id === id);
+	// };
+
 
 	const handleInputChange = (event) => {
 		setInputValue(event.target.value);
 	};
 
-	// const handleKeyDown = (event) => {
-	// 	if (event.key === "Enter") {
-	// 		if (inputValue === currentQuestion.answer) {
-	// 			// тут должно быть действие которое меняет статус isLearn на true
-	// 			//моргнуть зеленым
-	// 			counterShowQuestionsRef.current += 1;
-	// 			setInputValue("");
-	// 			setCurrentQuestion(getRandomQuestion(questions[selectedCategory]));
-	// 		} else {
-	// 			console.log('error!!!!')
-	// 			// тут надо сохранить вопрос чтобы вывести его в результатах
-	// 			//моргнуть красным
-	// 			counterShowQuestionsRef.current += 1;
-	// 			setCurrentQuestion(getRandomQuestion(questions[selectedCategory]));
-	// 			setInputValue("");
-	// 		}
-	// 	}
-	// };
-
 	const handleKeyDown = (event) => {
 		if (event.key === "Enter") {
 			if (!inputValue.trim()) return;
 			if (inputValue.trim() === currentQuestion.answer) {
-				// тут должно быть действие которое меняет статус isLearn на true
+				arrayStudiedQuestionsRef.current.push(currentQuestion);
 				setInputClass(styles.input_correct)
 				counterShowQuestionsRef.current += 1;
 			} else {
 				console.log('error!!!!')
-				// тут надо сохранить вопрос чтобы вывести его в результатах
+				arrayUnstudiedQuestionsRef.current.push(currentQuestion);
 				setInputClass(styles.input_error)
 				counterShowQuestionsRef.current += 1;
 			}
@@ -61,13 +48,10 @@ const GameContainer = ({ setShowGameScreen }) => {
 			setTimeout(() => {
 				setInputClass(styles.input);
 				setInputValue("");
-				setCurrentQuestion(getRandomQuestion(questions[selectedCategory].filter((item) => item.isLearn === false)));
-
+				setCurrentQuestion(getRandomIndex(questions[selectedCategory].filter((item) => item.isLearn === false)));
 		}, 400);
 		}
 	};
-
-	// получается надо какое-то дополнительное место где хранить правильные и неправильные ответы
 
 	const [isGameStarted, setIsGameStarted] = useState(false);
 	const [timeLeft, setTimeLeft] = useState(60); // время в секундах
@@ -76,7 +60,7 @@ const GameContainer = ({ setShowGameScreen }) => {
 
 	const startGame = () => {
 		setIsGameStarted(true);
-		setCurrentQuestion(getRandomQuestion(questions[selectedCategory].filter((item) => item.isLearn === false)));
+		setCurrentQuestion(getRandomIndex(questions[selectedCategory].filter((item) => item.isLearn === false)));
 	};
 
 	const optionsGameTime = gameTime.map((text, index) => {
@@ -91,7 +75,6 @@ const GameContainer = ({ setShowGameScreen }) => {
 					if (prevTime <= 1) {
 						clearInterval(timerId);
 						setIsGameStarted(false);
-						setShowGameScreen(false);
 						return 0;
 					}
 					return prevTime - 1;
@@ -99,7 +82,14 @@ const GameContainer = ({ setShowGameScreen }) => {
 			}, 1000);
 		}
 		return () => clearInterval(timerId);
-	}, [isGameStarted, timeLeft, setShowGameScreen]);
+	}, [isGameStarted, timeLeft]);
+
+	useEffect(() => {
+		if (timeLeft === 0 && isGameStarted === false) {
+			setUnstudiedQuestions(arrayUnstudiedQuestionsRef.current);
+			setShowGameScreen(false);
+		}
+	}, [timeLeft, isGameStarted, setShowGameScreen, setUnstudiedQuestions]);
 
 	const handleSelectedTime = (event) => {
 		setSelectedTime(event.target.value);
