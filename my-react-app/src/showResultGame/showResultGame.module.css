@@ -60,7 +60,7 @@
 
 .buttonWrap {
 	align-self: flex-end;
-
+	margin-top: auto;
 	display: flex;
 	flex-direction: column;
 	gap: 20px;

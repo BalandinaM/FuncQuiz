@@ -1,11 +1,12 @@
 /* eslint-disable react/prop-types */
-import styles from './showResultGame.module.css'
+import styles from "./showResultGame.module.css";
+import { useState } from "react";
 
-
-const ShowResultGame = ({unstudiedQuestions, gameTime, counterQuestions}) => {
+const ShowResultGame = ({ unstudiedQuestions, gameTime, counterQuestions }) => {
 	//проработать разворачивание неверных ответов по клику на надпись(стили не забудь добавить)
 	//обработчики на кнопки повторить и сбросить результаты
 	//сохранение результатов в локальный стейт (это в gameContainer надо делать)
+	const [isShowErrors, setIsShowErrors] = useState(false);
 
 	const errorAnswers = unstudiedQuestions.map((item) => {
 		return (
@@ -23,26 +24,40 @@ const ShowResultGame = ({unstudiedQuestions, gameTime, counterQuestions}) => {
 		);
 	});
 
+	// const handleToggleShowErrors = () => {
+	// 	console.log('показать!')
+	// }
+
 	return (
 		<div>
 			<h2 className={styles.title}>Результаты</h2>
 			<div className={styles.wrap}>
 				<div className={styles.statistics}>
-					<p>Время: <span>{gameTime}</span></p>
-					<p>Количество вопросов: <span>{counterQuestions}</span></p>
-					<p>Неверных ответов: <span>{unstudiedQuestions.length}</span></p>
-					<button className={styles.buttonStatistics}>Развернуть описание ошибочных ответов</button>
+					<p>
+						Время: <span>{gameTime}</span>
+					</p>
+					<p>
+						Количество вопросов: <span>{counterQuestions}</span>
+					</p>
+					<p>
+						Неверных ответов: <span>{unstudiedQuestions.length}</span>
+					</p>
+					<button
+						className={styles.buttonStatistics}
+						onClick={() => setIsShowErrors(!isShowErrors)}
+					>
+						{isShowErrors ? "Свернуть" : "Развернуть описание ошибочных ответов"}
+					</button>
 				</div>
-				<div className={styles.errorWrap}>
-					{errorAnswers}
-				</div>
+				{isShowErrors ? <div className={styles.errorWrap}>{errorAnswers}</div> : null}
+
 				<div className={styles.buttonWrap}>
 					<button>Повторить</button>
 					<button className={styles.buttonReset}>Сбросить результаты</button>
 				</div>
 			</div>
 		</div>
-	)
-}
+	);
+};
 
 export default ShowResultGame;
