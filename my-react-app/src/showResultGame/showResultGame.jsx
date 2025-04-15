@@ -1,31 +1,40 @@
+/* eslint-disable react/prop-types */
 import styles from './showResultGame.module.css'
 
 
-const ShowResultGame = ({unstudiedQuestions}) => {
-	console.log(unstudiedQuestions);
+const ShowResultGame = ({unstudiedQuestions, gameTime, counterQuestions}) => {
+	//проработать разворачивание неверных ответов по клику на надпись(стили не забудь добавить)
+	//обработчики на кнопки повторить и сбросить результаты
+	//сохранение результатов в локальный стейт (это в gameContainer надо делать)
+
+	const errorAnswers = unstudiedQuestions.map((item) => {
+		return (
+			<div className={styles.error} key={item.id}>
+				<p>
+					Вопрос:<span>{item.question}</span>
+				</p>
+				<p>
+					<span>Ответ: {item.answer};</span>
+				</p>
+				<p className={styles.errorText}>
+					<span>Твой ответ: {item.userAnswer}</span>
+				</p>
+			</div>
+		);
+	});
 
 	return (
 		<div>
 			<h2 className={styles.title}>Результаты</h2>
 			<div className={styles.wrap}>
 				<div className={styles.statistics}>
-					<p>Время: <span>00:01:00</span></p>
-					<p>Количество вопросов: <span>8</span></p>
-					<p>Неверных ответов: <span>1</span></p>
+					<p>Время: <span>{gameTime}</span></p>
+					<p>Количество вопросов: <span>{counterQuestions}</span></p>
+					<p>Неверных ответов: <span>{unstudiedQuestions.length}</span></p>
 					<button className={styles.buttonStatistics}>Развернуть описание ошибочных ответов</button>
 				</div>
 				<div className={styles.errorWrap}>
-					{/* подумать нужны ли тут спаны */}
-					<div className={styles.error}>
-						<p>Вопрос:<span>Метод изменяет порядок элементов в массиве на обратный.</span></p>
-						<p><span>Ответ: reverse();</span></p>
-						<p className={styles.errorText}><span>Твой ответ: revers();</span></p>
-					</div>
-					<div className={styles.error}>
-						<p>Вопрос:<span>Метод изменяет порядок элементов в массиве на обратный.</span></p>
-						<p><span>Ответ: reverse();</span></p>
-						<p  className={styles.errorText}><span>Твой ответ: revers();</span></p>
-					</div>
+					{errorAnswers}
 				</div>
 				<div className={styles.buttonWrap}>
 					<button>Повторить</button>

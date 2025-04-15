@@ -7,23 +7,35 @@ import styles from './root.module.css';
 import { useState } from 'react';
 
 const Root = () => {
-	const [showGameScreen, setShowGameScreen] = useState(true);//когда таймер дотикает надо будет менять на false
+	const [showGameScreen, setShowGameScreen] = useState(true);
 	const [unstudiedQuestions, setUnstudiedQuestions] = useState();
+	const [gameTime, setGameTime] = useState();
+	const [counterQuestions, setCounterQuestions] = useState();
 
 
   return (
-    <div className={styles.pageContainer}>
-      <Header/>
+		<div className={styles.pageContainer}>
+			<Header />
 			<div className={styles.wrapContent}>
 				<AboutGame />
-				{showGameScreen ?
-					<GameContainer setShowGameScreen={setShowGameScreen} setUnstudiedQuestions={setUnstudiedQuestions}/> :
-					<ShowResultGame unstudiedQuestions={unstudiedQuestions}/>
-				}
+				{showGameScreen ? (
+					<GameContainer
+						setShowGameScreen={setShowGameScreen}
+						setUnstudiedQuestions={setUnstudiedQuestions}
+						setGameTime={setGameTime}
+						setCounterQuestions={setCounterQuestions}
+					/>
+				) : (
+					<ShowResultGame
+						unstudiedQuestions={unstudiedQuestions}
+						gameTime={gameTime}
+						counterQuestions={counterQuestions}
+					/>
+				)}
 			</div>
-			<Footer/>
-    </div>
-  )
+			<Footer />
+		</div>
+	);
 }
 
 export default Root;

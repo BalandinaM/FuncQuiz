@@ -5,7 +5,7 @@ import SelectTime from "../selectTime/selectTime";
 import styles from "./gameContainer.module.css";
 import { useState, useEffect, useRef } from "react";
 
-const GameContainer = ({ setShowGameScreen, setUnstudiedQuestions }) => {
+const GameContainer = ({ setShowGameScreen, setUnstudiedQuestions, setGameTime, setCounterQuestions }) => {
 	const questions = useSelector((state) => state.questionsGame);
 	const questionCategories = Object.keys(questions);
 	const [selectedCategory, setSelectedCategory] = useState("arrays");
@@ -21,6 +21,15 @@ const GameContainer = ({ setShowGameScreen, setUnstudiedQuestions }) => {
 		const randomIndex = Math.floor(Math.random() * array.length);
 		return array[randomIndex];
 	};
+
+	function removeDuplicates(arr, key = 'id') {
+		if (!Array.isArray(arr)) {
+			console.error('Первый аргумент должен быть массивом');
+			return [];
+		}
+
+		return [...new Map(arr.map(item => [item[key], item])).values()];
+	}
 
 	// const findIndexById = (array, id) => {
 	// 	return array.findIndex((item) => item.id === id);
@@ -40,7 +49,11 @@ const GameContainer = ({ setShowGameScreen, setUnstudiedQuestions }) => {
 				counterShowQuestionsRef.current += 1;
 			} else {
 				console.log('error!!!!')
-				arrayUnstudiedQuestionsRef.current.push(currentQuestion);
+				const questionWithUserAnswer = {
+					...currentQuestion,
+					userAnswer: inputValue.trim()
+				};
+				arrayUnstudiedQuestionsRef.current.push(questionWithUserAnswer);
 				setInputClass(styles.input_error)
 				counterShowQuestionsRef.current += 1;
 			}
@@ -86,10 +99,12 @@ const GameContainer = ({ setShowGameScreen, setUnstudiedQuestions }) => {
 
 	useEffect(() => {
 		if (timeLeft === 0 && isGameStarted === false) {
-			setUnstudiedQuestions(arrayUnstudiedQuestionsRef.current);
+			setUnstudiedQuestions(removeDuplicates(arrayUnstudiedQuestionsRef.current));
+			setGameTime(selectedTime);
+			setCounterQuestions(counterShowQuestionsRef.current);
 			setShowGameScreen(false);
 		}
-	}, [timeLeft, isGameStarted, setShowGameScreen, setUnstudiedQuestions]);
+	}, [timeLeft, isGameStarted, setShowGameScreen, setUnstudiedQuestions, setGameTime, setCounterQuestions, selectedTime]);
 
 	const handleSelectedTime = (event) => {
 		setSelectedTime(event.target.value);
