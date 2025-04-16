@@ -6,7 +6,12 @@ import styles from "./gameContainer.module.css";
 import { useState, useEffect, useRef } from "react";
 import { setStudiedQuestions } from "../forStorage";
 
-const GameContainer = ({ setShowGameScreen, setUnstudiedQuestions, setGameTime, setCounterQuestions }) => {
+const GameContainer = ({
+	setShowGameScreen,
+	setUnstudiedQuestions,
+	setGameTime,
+	setCounterQuestions,
+}) => {
 	const questions = useSelector((state) => state.questionsGame);
 	const questionCategories = Object.keys(questions);
 	const [selectedCategory, setSelectedCategory] = useState("arrays");
@@ -17,25 +22,24 @@ const GameContainer = ({ setShowGameScreen, setUnstudiedQuestions, setGameTime, 
 	const [inputClass, setInputClass] = useState(styles.input);
 	const arrayStudiedQuestionsRef = useRef([]);
 	const arrayUnstudiedQuestionsRef = useRef([]);
+	const [isGameStarted, setIsGameStarted] = useState(false);
+	const [timeLeft, setTimeLeft] = useState(60); // время в секундах
+	const gameTime = ["1 минута", "2 минуты", "3 минуты"];
+	const [selectedTime, setSelectedTime] = useState("1 минута");
 
 	const getRandomIndex = (array) => {
 		const randomIndex = Math.floor(Math.random() * array.length);
 		return array[randomIndex];
 	};
 
-	function removeDuplicates(arr, key = 'id') {
+	function removeDuplicates(arr, key = "id") {
 		if (!Array.isArray(arr)) {
-			console.error('Первый аргумент должен быть массивом');
+			console.error("Первый аргумент должен быть массивом");
 			return [];
 		}
 
-		return [...new Map(arr.map(item => [item[key], item])).values()];
+		return [...new Map(arr.map((item) => [item[key], item])).values()];
 	}
-
-	// const findIndexById = (array, id) => {
-	// 	return array.findIndex((item) => item.id === id);
-	// };
-
 
 	const handleInputChange = (event) => {
 		setInputValue(event.target.value);
@@ -46,35 +50,34 @@ const GameContainer = ({ setShowGameScreen, setUnstudiedQuestions, setGameTime, 
 			if (!inputValue.trim()) return;
 			if (inputValue.trim() === currentQuestion.answer) {
 				arrayStudiedQuestionsRef.current.push(currentQuestion);
-				setInputClass(styles.input_correct)
+				setInputClass(styles.input_correct);
 				counterShowQuestionsRef.current += 1;
 			} else {
-				console.log('error!!!!')
+				console.log("error!!!!");
 				const questionWithUserAnswer = {
 					...currentQuestion,
-					userAnswer: inputValue.trim()
+					userAnswer: inputValue.trim(),
 				};
 				arrayUnstudiedQuestionsRef.current.push(questionWithUserAnswer);
-				setInputClass(styles.input_error)
+				setInputClass(styles.input_error);
 				counterShowQuestionsRef.current += 1;
 			}
 
 			setTimeout(() => {
 				setInputClass(styles.input);
 				setInputValue("");
-				setCurrentQuestion(getRandomIndex(questions[selectedCategory].filter((item) => item.isLearn === false)));
-		}, 400);
+				setCurrentQuestion(
+					getRandomIndex(questions[selectedCategory].filter((item) => item.isLearn === false))
+				);
+			}, 400);
 		}
 	};
 
-	const [isGameStarted, setIsGameStarted] = useState(false);
-	const [timeLeft, setTimeLeft] = useState(60); // время в секундах
-	const gameTime = ["1 минута", "2 минуты", "3 минуты"];
-	const [selectedTime, setSelectedTime] = useState("1 минута");
-
 	const startGame = () => {
 		setIsGameStarted(true);
-		setCurrentQuestion(getRandomIndex(questions[selectedCategory].filter((item) => item.isLearn === false)));
+		setCurrentQuestion(
+			getRandomIndex(questions[selectedCategory].filter((item) => item.isLearn === false))
+		);
 	};
 
 	const optionsGameTime = gameTime.map((text, index) => {
@@ -106,7 +109,16 @@ const GameContainer = ({ setShowGameScreen, setUnstudiedQuestions, setGameTime, 
 			setCounterQuestions(counterShowQuestionsRef.current);
 			setShowGameScreen(false);
 		}
-	}, [timeLeft, isGameStarted, setShowGameScreen, setUnstudiedQuestions, setGameTime, setCounterQuestions, selectedTime, selectedCategory]);
+	}, [
+		timeLeft,
+		isGameStarted,
+		setShowGameScreen,
+		setUnstudiedQuestions,
+		setGameTime,
+		setCounterQuestions,
+		selectedTime,
+		selectedCategory,
+	]);
 
 	const handleSelectedTime = (event) => {
 		setSelectedTime(event.target.value);
