@@ -5,8 +5,23 @@ import Header from '../header/header';
 import ShowResultGame from '../showResultGame/showResultGame';
 import styles from './root.module.css';
 import { useState } from 'react';
+import { getStudiedQuestions, setStudiedQuestions } from '../forStorage';
+import { useLoaderData } from 'react-router-dom';
+
+export async function loader() {
+	const studiedQuestions = await getStudiedQuestions();
+	return { studiedQuestions };
+}
+
+export async function action() {
+	const studiedQuestions = await setStudiedQuestions();
+	return { studiedQuestions };
+}
 
 const Root = () => {
+	const { studiedQuestionsFromStorage } = useLoaderData();
+	console.log(studiedQuestionsFromStorage);
+
 	const [showGameScreen, setShowGameScreen] = useState(true);
 	const [unstudiedQuestions, setUnstudiedQuestions] = useState();
 	const [gameTime, setGameTime] = useState();

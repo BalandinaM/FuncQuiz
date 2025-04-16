@@ -4,6 +4,7 @@ import SelectCategory from "../selectCategory/selectCategory";
 import SelectTime from "../selectTime/selectTime";
 import styles from "./gameContainer.module.css";
 import { useState, useEffect, useRef } from "react";
+import { setStudiedQuestions } from "../forStorage";
 
 const GameContainer = ({ setShowGameScreen, setUnstudiedQuestions, setGameTime, setCounterQuestions }) => {
 	const questions = useSelector((state) => state.questionsGame);
@@ -100,11 +101,12 @@ const GameContainer = ({ setShowGameScreen, setUnstudiedQuestions, setGameTime, 
 	useEffect(() => {
 		if (timeLeft === 0 && isGameStarted === false) {
 			setUnstudiedQuestions(removeDuplicates(arrayUnstudiedQuestionsRef.current));
+			setStudiedQuestions(removeDuplicates(arrayStudiedQuestionsRef.current), selectedCategory);
 			setGameTime(selectedTime);
 			setCounterQuestions(counterShowQuestionsRef.current);
 			setShowGameScreen(false);
 		}
-	}, [timeLeft, isGameStarted, setShowGameScreen, setUnstudiedQuestions, setGameTime, setCounterQuestions, selectedTime]);
+	}, [timeLeft, isGameStarted, setShowGameScreen, setUnstudiedQuestions, setGameTime, setCounterQuestions, selectedTime, selectedCategory]);
 
 	const handleSelectedTime = (event) => {
 		setSelectedTime(event.target.value);

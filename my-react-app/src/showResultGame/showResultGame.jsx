@@ -3,7 +3,6 @@ import styles from "./showResultGame.module.css";
 import { useState } from "react";
 
 const ShowResultGame = ({ unstudiedQuestions, gameTime, counterQuestions }) => {
-	//проработать разворачивание неверных ответов по клику на надпись(стили не забудь добавить)
 	//обработчики на кнопки повторить и сбросить результаты
 	//сохранение результатов в локальный стейт (это в gameContainer надо делать)
 	const [isShowErrors, setIsShowErrors] = useState(false);
@@ -23,10 +22,6 @@ const ShowResultGame = ({ unstudiedQuestions, gameTime, counterQuestions }) => {
 			</div>
 		);
 	});
-
-	// const handleToggleShowErrors = () => {
-	// 	console.log('показать!')
-	// }
 
 	return (
 		<div>
