@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+
 import styles from './selectCategory.module.css';
 
 const categoryTranslations = {
@@ -8,22 +9,31 @@ const categoryTranslations = {
   time: 'Работа с датой и временем'
 };
 
-const SelectCategory = ({questionCategories, selectedCategory, setSelectedCategory}) => {
+const SelectCategory = ({ questions, selectedCategory, setSelectedCategory }) => {
+  const questionCategories = [...new Set(questions.map(q => q.category))];
 
-	const options = questionCategories.map((category, index) => {
-		return <option value={category} key={index}>{categoryTranslations[category] || category}</option>
-	})
+  const options = questionCategories.map((category) => (
+    <option value={category} key={category}>
+      {categoryTranslations[category] || category}
+    </option>
+  ));
 
-	return (
-		<div className={styles.wrap}>
-			<h3>Выбери категорию функций по которой устроим проверку:</h3>
-			<select className={styles.select} value={selectedCategory} onChange={(event) => setSelectedCategory(event.target.value)}>
-				{options}
-			</select>
-		</div>
+	options.unshift(
+		<option value="all" key="all">Все категории</option>
 	);
+
+  return (
+    <div className={styles.wrap}>
+      <h3>Выбери категорию функций по которой устроим проверку:</h3>
+      <select
+        className={styles.select}
+        value={selectedCategory}
+        onChange={(event) => setSelectedCategory(event.target.value)}
+      >
+        {options}
+      </select>
+    </div>
+  );
 }
 
 export default SelectCategory;
-
-//тут надо подумать можно ли формировать пункты с помомщью пропсов.

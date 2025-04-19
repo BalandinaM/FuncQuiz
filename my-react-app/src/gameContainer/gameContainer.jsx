@@ -4,17 +4,34 @@ import SelectCategory from "../selectCategory/selectCategory";
 import SelectTime from "../selectTime/selectTime";
 import styles from "./gameContainer.module.css";
 import { useState, useEffect, useRef } from "react";
-import { setStudiedQuestions } from "../forStorage";
+import { addStudiedQuestions } from "../forStorage";
+
+export function removeDuplicates(arr, key = "id") {
+	if (!Array.isArray(arr)) {
+		console.error("Первый аргумент должен быть массивом");
+		return [];
+	}
+
+	return [...new Map(arr.map((item) => [item[key], item])).values()];
+}
 
 const GameContainer = ({
+	studiedQuestionsFromStorage,
 	setShowGameScreen,
 	setUnstudiedQuestions,
 	setGameTime,
 	setCounterQuestions,
 }) => {
-	const questions = useSelector((state) => state.questionsGame);
-	const questionCategories = Object.keys(questions);
-	const [selectedCategory, setSelectedCategory] = useState("arrays");
+	const questionsFromState = useSelector((state) => state.questionsGame);
+	const [questions, setQuestions] = useState(() => {
+		if (studiedQuestionsFromStorage.length === 0) return questionsFromState;
+
+		return questionsFromState.map(item => {
+			const update = studiedQuestionsFromStorage.find(u => u.id === item.id);
+			return update ? { ...item, ...update } : item;
+		});
+	});
+	const [selectedCategory, setSelectedCategory] = useState("all");
 	const [currentQuestion, setCurrentQuestion] = useState(null);
 	const [inputValue, setInputValue] = useState("");
 	const isDisabled = currentQuestion === null; //состояние для инпута и кнопки пока игра не началась
@@ -32,13 +49,12 @@ const GameContainer = ({
 		return array[randomIndex];
 	};
 
-	function removeDuplicates(arr, key = "id") {
-		if (!Array.isArray(arr)) {
-			console.error("Первый аргумент должен быть массивом");
-			return [];
+	const getQuestion = (selectedCategory) => {
+		if (selectedCategory == 'all') {
+			return getRandomIndex(questions.filter((item) => item.isLearn === false))
+		} else {
+			return getRandomIndex((questions.filter((item) => item.category === selectedCategory)).filter((item) => item.isLearn === false))
 		}
-
-		return [...new Map(arr.map((item) => [item[key], item])).values()];
 	}
 
 	const handleInputChange = (event) => {
@@ -66,18 +82,14 @@ const GameContainer = ({
 			setTimeout(() => {
 				setInputClass(styles.input);
 				setInputValue("");
-				setCurrentQuestion(
-					getRandomIndex(questions[selectedCategory].filter((item) => item.isLearn === false))
-				);
+				setCurrentQuestion(getQuestion(selectedCategory));
 			}, 400);
 		}
 	};
 
 	const startGame = () => {
 		setIsGameStarted(true);
-		setCurrentQuestion(
-			getRandomIndex(questions[selectedCategory].filter((item) => item.isLearn === false))
-		);
+		setCurrentQuestion(getQuestion(selectedCategory));
 	};
 
 	const optionsGameTime = gameTime.map((text, index) => {
@@ -104,7 +116,7 @@ const GameContainer = ({
 	useEffect(() => {
 		if (timeLeft === 0 && isGameStarted === false) {
 			setUnstudiedQuestions(removeDuplicates(arrayUnstudiedQuestionsRef.current));
-			setStudiedQuestions(removeDuplicates(arrayStudiedQuestionsRef.current), selectedCategory);
+			addStudiedQuestions(removeDuplicates(arrayStudiedQuestionsRef.current));
 			setGameTime(selectedTime);
 			setCounterQuestions(counterShowQuestionsRef.current);
 			setShowGameScreen(false);
@@ -146,7 +158,7 @@ const GameContainer = ({
 	return (
 		<>
 			<SelectCategory
-				questionCategories={questionCategories}
+				questions={questions}
 				selectedCategory={selectedCategory}
 				setSelectedCategory={setSelectedCategory}
 			/>
@@ -164,7 +176,7 @@ const GameContainer = ({
 					{currentQuestion != null ? (
 						<p>{currentQuestion.question}</p>
 					) : (
-						<p>Метод изменяет порядок элементов в массиве на обратный</p>
+						<p>Тут стилями надо сделать размытость</p>
 					)}
 				</div>
 				<input

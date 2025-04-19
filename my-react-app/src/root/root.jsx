@@ -9,8 +9,8 @@ import { getStudiedQuestions, setStudiedQuestions } from '../forStorage';
 import { useLoaderData } from 'react-router-dom';
 
 export async function loader() {
-	const studiedQuestions = await getStudiedQuestions();
-	return { studiedQuestions };
+	const studiedQuestionsFromStorage = await getStudiedQuestions();
+	return { studiedQuestionsFromStorage };
 }
 
 export async function action() {
@@ -35,6 +35,7 @@ const Root = () => {
 				<AboutGame />
 				{showGameScreen ? (
 					<GameContainer
+						studiedQuestionsFromStorage={studiedQuestionsFromStorage}
 						setShowGameScreen={setShowGameScreen}
 						setUnstudiedQuestions={setUnstudiedQuestions}
 						setGameTime={setGameTime}

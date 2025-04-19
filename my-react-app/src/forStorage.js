@@ -1,4 +1,5 @@
 import localforage from "localforage";
+import { removeDuplicates } from "./gameContainer/gameContainer";
 
 export async function getStudiedQuestions() {
 	await someNetwork();
@@ -7,13 +8,17 @@ export async function getStudiedQuestions() {
 	return studiedQuestions;
 }
 
-// export async function setStudiedQuestions(studiedQuestions) {
-// 	return await localforage.setItem('studiedQuestions', studiedQuestions);
-// }
+export async function addStudiedQuestions(studiedQuestions) {
+	let arrayStudiedQuestionsFromStorage = await getStudiedQuestions() || [];
+	const updated = [
+    ...studiedQuestions.map(q => ({ ...q, isLearn: true })),
+    ...arrayStudiedQuestionsFromStorage
+	]
+	await setStudiedQuestions(removeDuplicates(updated));
+}
 
-export async function setStudiedQuestions(studiedQuestions, selectedCategory) {
+export async function setStudiedQuestions(studiedQuestions) {
 	try {
-		console.log(selectedCategory);
     await localforage.setItem("studiedQuestions", studiedQuestions);
   } catch (error) {
     console.error("Ошибка при сохранении данных в localforage:", error);
