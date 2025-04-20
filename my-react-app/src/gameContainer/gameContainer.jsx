@@ -5,6 +5,7 @@ import SelectTime from "../selectTime/selectTime";
 import styles from "./gameContainer.module.css";
 import { useState, useEffect, useRef } from "react";
 import { addStudiedQuestions } from "../forStorage";
+import ModalBox from "../modalBox/modalBox";
 
 export function removeDuplicates(arr, key = "id") {
 	if (!Array.isArray(arr)) {
@@ -32,6 +33,8 @@ const GameContainer = ({
 		});
 	});
 	const [selectedCategory, setSelectedCategory] = useState("all");
+	//const [isLearnedCategory, setIsLearnedCategory] = useState(false);
+	const [showModalSave, setShowModalSave] = useState(false);
 	const [currentQuestion, setCurrentQuestion] = useState(null);
 	const [inputValue, setInputValue] = useState("");
 	const isDisabled = currentQuestion === null; //состояние для инпута и кнопки пока игра не началась
@@ -55,7 +58,22 @@ const GameContainer = ({
 		} else {
 			return getRandomIndex((questions.filter((item) => item.category === selectedCategory)).filter((item) => item.isLearn === false))
 		}
-	}
+	};
+
+	const handleChangeSelect = (event) => {//проверка на то что массив выбранной категории не пустой
+		if (
+			questions
+				.filter((item) => item.category === event.target.value)
+				.filter((item) => item.isLearn === false).length != 0
+		) {
+			console.log("элементы есть!");
+			setSelectedCategory(event.target.value);
+		} else {
+			//setIsLearnedCategory(true);
+			console.log("ПУСТО!");
+			setShowModalSave(true);
+		}
+	};
 
 	const handleInputChange = (event) => {
 		setInputValue(event.target.value);
@@ -161,6 +179,7 @@ const GameContainer = ({
 				questions={questions}
 				selectedCategory={selectedCategory}
 				setSelectedCategory={setSelectedCategory}
+				handleChangeSelect={handleChangeSelect}
 			/>
 			<SelectTime
 				selectedTime={selectedTime}
@@ -176,7 +195,7 @@ const GameContainer = ({
 					{currentQuestion != null ? (
 						<p>{currentQuestion.question}</p>
 					) : (
-						<p>Тут стилями надо сделать размытость</p>
+						<p className={styles.blurredText}>FuncQuiz. Тренировка знаний JavaScript функций.</p>
 					)}
 				</div>
 				<input
@@ -189,6 +208,13 @@ const GameContainer = ({
 					disabled={isDisabled}
 				/>
 			</div>
+			{showModalSave && (
+				<ModalBox
+					message="Вы знаете все функции в этой категории! Пожалуйста, выберите другую!"
+					duration={3000}
+					onClose={() => setShowModalSave(false)}
+				/>
+			)}
 		</>
 	);
 };
