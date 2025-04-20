@@ -89,6 +89,20 @@ const initialState = [
 		answer: "getMinutes()",
 		isLearn: false,
 	},
+	{
+		category: "arrays",
+		id: 114,
+		question: "Метод изменяет порядок элементов в массиве на обратный.",
+		answer: "reverse()",
+		isLearn: false,
+	},
+	{
+		category: "arrays",
+		id: 115,
+		question: "Метод проверяет наличие элемента в массиве. Параметром принимает значение для поиска. Если такой элемент есть в массиве, то метод возвращает true, а если нет, то false.",
+		answer: "includes()",
+		isLearn: false,
+	},
 ];
 
 export const questionsGameSlice = createSlice({
