@@ -28,6 +28,11 @@
 	font-size: 22px;
 }
 
+.blurredText {
+  filter: blur(4px);
+  color: var(--text-secondary-color);
+}
+
 .input {
 	font-family: var(--second-family);
 	font-size: 20px;
