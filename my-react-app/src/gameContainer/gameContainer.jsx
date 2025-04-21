@@ -22,6 +22,7 @@ const GameContainer = ({
 	setUnstudiedQuestions,
 	setGameTime,
 	setCounterQuestions,
+	handleResetProgress
 }) => {
 	const questionsFromState = useSelector((state) => state.questionsGame);
 	const [questions, setQuestions] = useState(() => {
@@ -208,6 +209,7 @@ const GameContainer = ({
 					disabled={isDisabled}
 				/>
 			</div>
+			<button className={styles.buttonReset} onClick={() => handleResetProgress()}>Сбросить результаты</button>
 			{showModalSave && (
 				<ModalBox
 					message="Вы знаете все функции в этой категории! Пожалуйста, выберите другую!"
