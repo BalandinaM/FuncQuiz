@@ -2,9 +2,9 @@
 import styles from "./showResultGame.module.css";
 import { useState } from "react";
 
-const ShowResultGame = ({ unstudiedQuestions, gameTime, counterQuestions }) => {
+
+const ShowResultGame = ({ unstudiedQuestions, gameTime, counterQuestions, handleRepeatGame}) => {
 	//обработчики на кнопки повторить и сбросить результаты
-	//сохранение результатов в локальный стейт (это в gameContainer надо делать)
 	const [isShowErrors, setIsShowErrors] = useState(false);
 
 	const errorAnswers = unstudiedQuestions.map((item) => {
@@ -47,8 +47,8 @@ const ShowResultGame = ({ unstudiedQuestions, gameTime, counterQuestions }) => {
 				{isShowErrors ? <div className={styles.errorWrap}>{errorAnswers}</div> : null}
 
 				<div className={styles.buttonWrap}>
-					<button>Повторить</button>
-					<button className={styles.buttonReset}>Сбросить результаты</button>
+					<button onClick={() => handleRepeatGame()}>Повторить</button>
+					{/* <button className={styles.buttonReset} onClick={() => handleResetProgress()}>Сбросить результаты</button> */}
 				</div>
 			</div>
 		</div>
