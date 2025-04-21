@@ -1,6 +1,7 @@
 import localforage from "localforage";
 import { removeDuplicates } from "./gameContainer/gameContainer";
 
+
 export async function getStudiedQuestions() {
 	await someNetwork();
 	let studiedQuestions = await localforage.getItem("studiedQuestions");
@@ -22,6 +23,25 @@ export async function setStudiedQuestions(studiedQuestions) {
     await localforage.setItem("studiedQuestions", studiedQuestions);
   } catch (error) {
     console.error("Ошибка при сохранении данных в localforage:", error);
+    throw error;
+  }
+}
+
+export async function resetProgress() {
+  try {
+    // Очищаем конкретный ключ с изученными вопросами
+    await localforage.removeItem("studiedQuestions");
+
+    // Альтернативно можно очистить ВСЕ хранилище полностью:
+    // await localforage.clear();
+
+    // Также очищаем кеш
+    someCache = {};
+
+    console.log("Прогресс успешно сброшен");
+    return true;
+  } catch (error) {
+    console.error("Ошибка при сбросе прогресса:", error);
     throw error;
   }
 }
