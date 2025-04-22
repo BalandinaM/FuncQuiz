@@ -159,11 +159,13 @@ const GameContainer = ({
 				selectedCategory={selectedCategory}
 				setSelectedCategory={setSelectedCategory}
 				handleChangeSelect={handleChangeSelect}
+				isGameStarted={isGameStarted}
 			/>
 			<SelectTime
 				selectedTime={selectedTime}
 				handleSelectedTime={handleSelectedTime}
 				optionsGameTime={optionsGameTime}
+				isGameStarted={isGameStarted}
 			/>
 			<button className={styles.buttonPlay} onClick={startGame} disabled={isGameStarted}>
 				Начать
@@ -187,7 +189,7 @@ const GameContainer = ({
 					disabled={isDisabled}
 				/>
 			</div>
-			<button className={styles.buttonReset} onClick={() => handleResetResult()}>Сбросить результаты</button>
+			<button className={styles.buttonReset} onClick={() => handleResetResult()} disabled={isGameStarted}>Сбросить результаты</button>
 			{showMessage && (
 				<ModalBox
 					message="Вы знаете все функции в этой категории! Пожалуйста, выберите другую!"

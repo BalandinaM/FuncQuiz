@@ -9,7 +9,7 @@ const categoryTranslations = {
 	time: "Работа с датой и временем",
 };
 
-const SelectCategory = ({ questions, selectedCategory, handleChangeSelect }) => {
+const SelectCategory = ({ questions, selectedCategory, handleChangeSelect, isGameStarted }) => {
 	const questionCategories = [...new Set(questions.map((q) => q.category))];
 
 	const options = questionCategories.map((category) => (
@@ -31,6 +31,7 @@ const SelectCategory = ({ questions, selectedCategory, handleChangeSelect }) => 
 				className={styles.select}
 				value={selectedCategory}
 				onChange={(event) => handleChangeSelect(event)}
+				disabled={isGameStarted}
 			>
 				{options}
 			</select>
