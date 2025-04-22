@@ -3,7 +3,6 @@
 	margin: 0 auto;
 	height: 80px;
 	position: relative;
-	/* padding: 30px 0; */
 }
 
 .container::after {
@@ -25,6 +24,7 @@
   top: -14px;
   left: 0;
   font-weight: 700;
+	text-decoration: none;
 }
 
 .copyright:hover {

@@ -6,15 +6,8 @@ import styles from "./gameContainer.module.css";
 import { useState, useEffect, useRef } from "react";
 import { addStudiedQuestions } from "../forStorage";
 import ModalBox from "../modalBox/modalBox";
-
-export function removeDuplicates(arr, key = "id") {
-	if (!Array.isArray(arr)) {
-		console.error("Первый аргумент должен быть массивом");
-		return [];
-	}
-
-	return [...new Map(arr.map((item) => [item[key], item])).values()];
-}
+import { removeDuplicates } from "../assests/util";
+import { mergeQuestions, getRandomIndex, getQuestion } from "./gameUtils";
 
 const GameContainer = ({
 	studiedQuestionsFromStorage,
@@ -24,17 +17,12 @@ const GameContainer = ({
 	setCounterQuestions,
 	handleResetResult
 }) => {
-	const questionsFromState = useSelector((state) => state.questionsGame);
-	const [questions, setQuestions] = useState(() => {
-		if (studiedQuestionsFromStorage.length === 0) return questionsFromState;
-
-		return questionsFromState.map(item => {
-			const update = studiedQuestionsFromStorage.find(u => u.id === item.id);
-			return update ? { ...item, ...update } : item;
-		});
-	});
+	const questionsFromState = useSelector((state) => state.questionsGame);//получаем массив вопросов из стора
+	const [questions, setQuestions] = useState(
+    () => mergeQuestions(questionsFromState, studiedQuestionsFromStorage)
+  );
 	const [selectedCategory, setSelectedCategory] = useState("all");
-	const [showModalSave, setShowModalSave] = useState(false);
+	const [showMessage, setShowMessage] = useState(false);
 	const [currentQuestion, setCurrentQuestion] = useState(null);
 	const [inputValue, setInputValue] = useState("");
 	const isDisabled = currentQuestion === null; //состояние для инпута и кнопки пока игра не началась
@@ -48,41 +36,22 @@ const GameContainer = ({
 	const [selectedTime, setSelectedTime] = useState("1 минута");
 
 	useEffect(() => {
-		if (studiedQuestionsFromStorage.length === 0) {
-			setQuestions(questionsFromState);
-		} else {
-			setQuestions(questionsFromState.map(item => {
-				const update = studiedQuestionsFromStorage.find(u => u.id === item.id);
-				return update ? { ...item, ...update } : item;
-			}));
-		}
-	}, [studiedQuestionsFromStorage, questionsFromState]);
+    setQuestions(mergeQuestions(questionsFromState, studiedQuestionsFromStorage));
+  }, [studiedQuestionsFromStorage, questionsFromState]);
 
-	const getRandomIndex = (array) => {
-		const randomIndex = Math.floor(Math.random() * array.length);
-		return array[randomIndex];
-	};
-
-	const getQuestion = (selectedCategory) => {
-		if (selectedCategory == 'all') {
-			return getRandomIndex(questions.filter((item) => item.isLearn === false))
-		} else {
-			return getRandomIndex((questions.filter((item) => item.category === selectedCategory)).filter((item) => item.isLearn === false))
-		}
-	};
-
-	const handleChangeSelect = (event) => {//проверка на то что массив выбранной категории не пустой
+	const handleChangeSelect = (event) => {
+	//проверка на то что массив выбранной категории не пустой
 		if (
 			questions
 				.filter((item) => item.category === event.target.value)
 				.filter((item) => item.isLearn === false).length != 0
 		) {
-			console.log("элементы есть!");
+			setSelectedCategory(event.target.value);
+		} else if (event.target.value == "all") {
+			questions.filter((item) => item.isLearn === false);
 			setSelectedCategory(event.target.value);
 		} else {
-			//setIsLearnedCategory(true);
-			console.log("ПУСТО!");
-			setShowModalSave(true);
+			setShowMessage(true);
 		}
 	};
 
@@ -98,7 +67,6 @@ const GameContainer = ({
 				setInputClass(styles.input_correct);
 				counterShowQuestionsRef.current += 1;
 			} else {
-				console.log("error!!!!");
 				const questionWithUserAnswer = {
 					...currentQuestion,
 					userAnswer: inputValue.trim(),
@@ -111,14 +79,14 @@ const GameContainer = ({
 			setTimeout(() => {
 				setInputClass(styles.input);
 				setInputValue("");
-				setCurrentQuestion(getQuestion(selectedCategory));
+				setCurrentQuestion(getQuestion(selectedCategory,questions));
 			}, 400);
 		}
 	};
 
 	const startGame = () => {
 		setIsGameStarted(true);
-		setCurrentQuestion(getQuestion(selectedCategory));
+		setCurrentQuestion(getQuestion(selectedCategory, questions));
 	};
 
 	const optionsGameTime = gameTime.map((text, index) => {
@@ -220,11 +188,11 @@ const GameContainer = ({
 				/>
 			</div>
 			<button className={styles.buttonReset} onClick={() => handleResetResult()}>Сбросить результаты</button>
-			{showModalSave && (
+			{showMessage && (
 				<ModalBox
 					message="Вы знаете все функции в этой категории! Пожалуйста, выберите другую!"
 					duration={3000}
-					onClose={() => setShowModalSave(false)}
+					onClose={() => setShowMessage(false)}
 				/>
 			)}
 		</>

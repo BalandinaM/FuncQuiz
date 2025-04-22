@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import styles from './selectTime.module.css'
 
 const SelectTime = ({selectedTime, handleSelectedTime, optionsGameTime}) => {

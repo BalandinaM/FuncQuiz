@@ -1,6 +1,5 @@
 import localforage from "localforage";
-import { removeDuplicates } from "./gameContainer/gameContainer";
-
+import { removeDuplicates } from "./assests/util";
 
 export async function getStudiedQuestions() {
 	await someNetwork();
@@ -30,13 +29,8 @@ export async function setStudiedQuestions(studiedQuestions) {
 
 export async function resetProgress() {
   try {
-    // Очищаем конкретный ключ с изученными вопросами
     await localforage.removeItem("studiedQuestions");
 
-    // Альтернативно можно очистить ВСЕ хранилище полностью:
-    // await localforage.clear();
-
-    // Также очищаем кеш
     someCache = {};
 
     console.log("Прогресс успешно сброшен");
