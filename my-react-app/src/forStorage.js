@@ -6,6 +6,7 @@ export async function getStudiedQuestions() {
 	await someNetwork();
 	let studiedQuestions = await localforage.getItem("studiedQuestions");
 	if (!studiedQuestions) studiedQuestions = [];
+	console.log('Получено из хранилища:', studiedQuestions)
 	return studiedQuestions;
 }
 
@@ -39,6 +40,7 @@ export async function resetProgress() {
     someCache = {};
 
     console.log("Прогресс успешно сброшен");
+		console.log('Проверка после очистки:', await localforage.getItem("studiedQuestions"))
     return true;
   } catch (error) {
     console.error("Ошибка при сбросе прогресса:", error);

@@ -76,5 +76,6 @@
 .buttonReset {
 	display: block;
   margin-left: auto;
+	margin-bottom: 20px;
 	background-color: var(--error-color);
 }

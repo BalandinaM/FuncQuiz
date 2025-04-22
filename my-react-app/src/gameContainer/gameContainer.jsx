@@ -22,7 +22,7 @@ const GameContainer = ({
 	setUnstudiedQuestions,
 	setGameTime,
 	setCounterQuestions,
-	handleResetProgress
+	handleResetResult
 }) => {
 	const questionsFromState = useSelector((state) => state.questionsGame);
 	const [questions, setQuestions] = useState(() => {
@@ -34,7 +34,6 @@ const GameContainer = ({
 		});
 	});
 	const [selectedCategory, setSelectedCategory] = useState("all");
-	//const [isLearnedCategory, setIsLearnedCategory] = useState(false);
 	const [showModalSave, setShowModalSave] = useState(false);
 	const [currentQuestion, setCurrentQuestion] = useState(null);
 	const [inputValue, setInputValue] = useState("");
@@ -47,6 +46,17 @@ const GameContainer = ({
 	const [timeLeft, setTimeLeft] = useState(60); // время в секундах
 	const gameTime = ["1 минута", "2 минуты", "3 минуты"];
 	const [selectedTime, setSelectedTime] = useState("1 минута");
+
+	useEffect(() => {
+		if (studiedQuestionsFromStorage.length === 0) {
+			setQuestions(questionsFromState);
+		} else {
+			setQuestions(questionsFromState.map(item => {
+				const update = studiedQuestionsFromStorage.find(u => u.id === item.id);
+				return update ? { ...item, ...update } : item;
+			}));
+		}
+	}, [studiedQuestionsFromStorage, questionsFromState]);
 
 	const getRandomIndex = (array) => {
 		const randomIndex = Math.floor(Math.random() * array.length);
@@ -209,7 +219,7 @@ const GameContainer = ({
 					disabled={isDisabled}
 				/>
 			</div>
-			<button className={styles.buttonReset} onClick={() => handleResetProgress()}>Сбросить результаты</button>
+			<button className={styles.buttonReset} onClick={() => handleResetResult()}>Сбросить результаты</button>
 			{showModalSave && (
 				<ModalBox
 					message="Вы знаете все функции в этой категории! Пожалуйста, выберите другую!"

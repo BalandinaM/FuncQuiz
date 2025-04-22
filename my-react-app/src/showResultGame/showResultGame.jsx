@@ -3,7 +3,7 @@ import styles from "./showResultGame.module.css";
 import { useState } from "react";
 
 
-const ShowResultGame = ({ unstudiedQuestions, gameTime, counterQuestions, handleRepeatGame}) => {
+const ShowResultGame = ({ unstudiedQuestions, gameTime, counterQuestions, setShowGameScreen}) => {
 	//обработчики на кнопки повторить и сбросить результаты
 	const [isShowErrors, setIsShowErrors] = useState(false);
 
@@ -47,7 +47,7 @@ const ShowResultGame = ({ unstudiedQuestions, gameTime, counterQuestions, handle
 				{isShowErrors ? <div className={styles.errorWrap}>{errorAnswers}</div> : null}
 
 				<div className={styles.buttonWrap}>
-					<button onClick={() => handleRepeatGame()}>Повторить</button>
+					<button onClick={() => setShowGameScreen(true)}>Повторить</button>
 					{/* <button className={styles.buttonReset} onClick={() => handleResetProgress()}>Сбросить результаты</button> */}
 				</div>
 			</div>
