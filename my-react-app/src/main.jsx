@@ -18,12 +18,14 @@ const router = createBrowserRouter([
 		loader: rootLoader,
 		action: rootAction,
 	},
-]);
+], {
+  basename: "/FuncQuiz/",
+});
 
 createRoot(document.getElementById("root")).render(
 	<StrictMode>
 		<Provider store={store}>
-			<RouterProvider router={router} />
+			<RouterProvider router={router} fallbackElement={<div>Loading...</div>} />
 		</Provider>
 	</StrictMode>
 );
